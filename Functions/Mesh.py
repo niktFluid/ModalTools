@@ -59,6 +59,10 @@ class Mesh:
         # Detect boundary face.
         raise NotImplementedError
 
+    def is_boundary_cell(self, id_cell):
+        # Detect boundary cell.
+        raise NotImplementedError
+
     def get_face_direction(self, id_cell, nb_cell, id_face):
         # Define the direction of face.
         # id_cell: ID for the target cell
@@ -116,6 +120,12 @@ class OfMesh(Mesh):
 
     def is_boundary_face(self, id_face):
         if id_face >= self._i_start_bd:
+            return True
+        else:
+            return False
+
+    def is_boundary_cell(self, id_cell):
+        if id_cell < 0:
             return True
         else:
             return False

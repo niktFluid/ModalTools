@@ -5,7 +5,7 @@ import pickle
 
 import numpy as np
 import scipy as sp
-from scipy.sparse import linalg, csc_matrix
+from scipy.sparse import linalg
 from scipy import sparse
 
 from Functions.FieldData import FieldData

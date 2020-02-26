@@ -23,7 +23,7 @@ class Gradient(Variables):
 
     def _return_ref_cells(self, id_cell):
         cell_list = [id_cell] + self.mesh.cell_neighbours(id_cell)
-        ref_cells = [i_cell for i_cell in cell_list if i_cell >= 0]
+        ref_cells = [i_cell for i_cell in cell_list if not self.mesh.is_boundary_cell(i_cell)]
 
         return list(set(ref_cells))
 
