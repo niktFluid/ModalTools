@@ -8,7 +8,7 @@ from Functions.Gradient import Gradient
 
 
 class LNS(Variables):  # Linearized Navier-Stokes equations
-    def __init__(self, mesh, ave_field, mu, pr, is2d=False):
+    def __init__(self, mesh, ave_field, mu, pr, grad_type='GLSQ', is2d=False):
         self.gamma = 1.4
         self.gamma_1 = 1.0 / (1.4 - 1.0)
         self.gamma_inv = 1.0 / 1.4
@@ -23,7 +23,7 @@ class LNS(Variables):  # Linearized Navier-Stokes equations
         self.bd_cond = BDcond(mesh, is2d=is2d)
         # self._vol_weight = mesh.volumes / np.sum(mesh.volumes)
 
-        self._grad = Gradient(mesh, is2d=is2d)
+        self._grad = Gradient(mesh, grad_type=grad_type, is2d=is2d)
         sub_list = [self._grad]
 
         super(LNS, self).__init__(mesh, n_return=5, sub_list=sub_list)
@@ -57,14 +57,6 @@ class LNS(Variables):  # Linearized Navier-Stokes equations
             rhs_vec -= self._calc_inviscid_flux(id_cell, nb_cell, nb_face) * area * flip
             rhs_vec += self._calc_viscous_flux(id_cell, nb_cell, nb_face) * area * flip
         return self._conv2prime(rhs_vec, id_cell) / self.mesh.volumes[id_cell]
-
-    # def _grad_data(self):
-    #     def grad(id_cell):
-    #         grad_data = np.zeros((self.n_val, 3), dtype=np.float64)
-    #         for i_val in range(5):
-    #             grad_data[i_val] = self._grad.formula(self._data, id_cell, i_val)
-    #         return grad_data
-    #     self._grad_refs = {i_cell: grad(i_cell) for i_cell in self._ref_cells}
 
     class _GradData:
         def __init__(self, grad):
@@ -132,7 +124,7 @@ class LNS(Variables):  # Linearized Navier-Stokes equations
 
     def _calc_viscous_flux(self, id_cell, nb_cell, nb_face):
         flux = np.zeros(5, dtype=np.float64)
-        face_normal_vec = self.mesh.face_mat[nb_face, 0]  # * self._get_face_direction(id_cell, nb_cell)
+        face_normal_vec = self.mesh.face_mat[nb_face, 0]
 
         vec_a, vec_b = self._get_cell_vals(self._data, id_cell, nb_cell, nb_face)
         vec_f = 0.5 * (vec_a + vec_b)
@@ -291,8 +283,6 @@ class LNS2(LNS):  # Linearized Navier-Stokes equations. Based on Knoll and Keyes
         con_data[data.i_cell, data.i_val] += eps
         self._data = self._conv2prime(con_data)
 
-        # self._ref_cells = self._return_ref_cells(id_cell)
-        # self._GradData()
         self._grad_refs.set_grad(data, self._return_ref_cells(id_cell))
 
         nb_cells = self.mesh.cell_neighbours(id_cell)
