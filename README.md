@@ -1,14 +1,12 @@
 # ModalTools
-====
 
-Overview
 This codes construct a linear operator from a field data of compressible fluid flows.
 
 ## Description
 
 ## Demo
 
-## Requirement
+## Requirements
 * Python 3.*
 * NumPy 
 * SciPy
@@ -19,12 +17,16 @@ This codes construct a linear operator from a field data of compressible fluid f
 
 ## Install
 
-## Contribution
-
 ## Author
 
 * **Yoimi Kojima** - [niktFluid](https://github.com/niktFluid)
 
 ## Licence
 
-[MIT](https://github.com/tcnksm/tool/blob/master/LICENCE)
+This project is licensed under the [MIT License]((https://github.com/tcnksm/tool/blob/master/LICENCE)) - see the [LICENSE.md](LICENSE) file for details
+
+<!--
+## Acknowledgments
+
+The author gratefully acknowledge members of [Taira laboratory](http://www.seas.ucla.edu/fluidflow/group.html) for insightful comments and discussions on the implementations.
+-->

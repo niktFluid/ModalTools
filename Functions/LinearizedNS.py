@@ -267,8 +267,8 @@ class LNS(Variables):  # Linearized Navier-Stokes equations
 
 
 class LNS2(LNS):  # Linearized Navier-Stokes equations. Based on Knoll and Keyes, 2004.
-    def __init__(self, mesh, ave_field, mu, pr, is2d=False):
-        super(LNS2, self).__init__(mesh, ave_field, mu, pr, is2d)
+    def __init__(self, mesh, ave_field, mu, pr, grad_type='GLSQ', is2d=False):
+        super(LNS2, self).__init__(mesh, ave_field, mu, pr, grad_type=grad_type, is2d=is2d)
 
         # Average field in this class MUST be Conservative variables.
         self._con_ave = ave_field.data
@@ -366,8 +366,8 @@ class LNS2(LNS):  # Linearized Navier-Stokes equations. Based on Knoll and Keyes
 
 
 class NS(LNS2):  # Calculate Right Hand Side term of NS equation.
-    def __init__(self, mesh, ave_field, mu, pr, is2d=False):
-        super(NS, self).__init__(mesh, ave_field, mu, pr, is2d)
+    def __init__(self, mesh, ave_field, mu, pr, grad_type='GLSQ', is2d=False):
+        super(NS, self).__init__(mesh, ave_field, mu, pr, grad_type=grad_type, is2d=is2d)
 
     def formula(self, id_cell, **kwargs):
         nb_cells = self.mesh.cell_neighbours(id_cell)

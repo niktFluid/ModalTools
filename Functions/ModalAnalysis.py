@@ -351,15 +351,18 @@ class RandomizedResolventMode(ResolventMode):
 
     def _calculate(self, resolvent):
         resolvent_lu = linalg.splu(resolvent)
+
         m = self.n_cell * 5  # = resolvent.shape[0]
         k = self._k  # Number of mode
-
         matO = self._scaling @ np.random.normal(0.0, 0.1, (m, k))
         matY = resolvent_lu.solve(matO)
+
         matQ, _ = sp.linalg.qr(matY, mode='economic')
         matB = resolvent_lu.solve(matQ, trans='H')
+
         _, _, V = sp.linalg.svd(matB.T.conj(), full_matrices=False)
         matUS = resolvent_lu.solve(V.T.conj())
+
         U, Sigma, Vapp = sp.linalg.svd(matUS.conj(), full_matrices=False)
         V = V.T.conj() @ Vapp.T.conj()
 
