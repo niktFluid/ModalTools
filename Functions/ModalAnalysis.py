@@ -369,6 +369,30 @@ class RandomizedResolventMode(ResolventMode):
         return Sigma, U, V
 
 
+class ResolventTest(RandomizedResolventMode):
+    def __init__(self, mesh, ave_field, operator, n_val=5, k=6, mode='Both', **kwargs):
+        super(RandomizedResolventMode, self).__init__(mesh, ave_field, operator, n_val, k, mode, **kwargs)
+
+    def _calculate(self, resolvent):
+        resolvent_lu = linalg.splu(resolvent)
+
+        m = self.n_cell * 5  # = resolvent.shape[0]
+        k = self._k  # Number of mode
+        matO = self._scaling @ np.random.normal(0.0, 0.1, (m, k))
+        matY = resolvent_lu.solve(matO)
+
+        matQ, _ = sp.linalg.qr(matY, mode='economic')
+        matB = resolvent_lu.solve(matQ, trans='H')
+
+        _, _, V = sp.linalg.svd(matB.T.conj(), full_matrices=False)
+        matUS = resolvent_lu.solve(V.T.conj())
+
+        U, Sigma, Vapp = sp.linalg.svd(matUS.conj(), full_matrices=False)
+        V = V.T.conj() @ Vapp.T.conj()
+
+        return Sigma, U, V
+
+
 class RHS(FieldData):
     def __init__(self, mesh, field, mu, pr, is2d=False):
         super(RHS, self).__init__(mesh, n_val=5, data_list=['Rho', 'RhoU', 'RhoV', 'RhoW', 'E'])
