@@ -148,7 +148,6 @@ def CalcRandomizedResolvent(case_dir, time, operator_name, save_name,
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Modal analysis.')
 
-    # parser.add_argument('mode', help='Calculation mode. "Stability" or "Resolvent"')
     parser.add_argument('-f', '--filename', default='Parameter.dat', help='Parameter file for the calculation.')
     parser.add_argument('-p', '--profile', default='Default', help='Profile for the parameters.')
     args = parser.parse_args()

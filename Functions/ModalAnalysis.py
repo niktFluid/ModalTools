@@ -9,7 +9,7 @@ from scipy.sparse import linalg
 from scipy import sparse
 
 from Functions.FieldData import FieldData
-from Functions.LinearizedNS import NS
+from Functions.LinearizedNS import LNS
 from Functions.Gradient import Gradient
 
 
@@ -289,7 +289,7 @@ class ResolventMode(ModalData):
 
         print('Singular values: ', np.sqrt(svs))
         # print('Gains: ', 1.0 / np.sqrt(svs))
-        return 1.0 / np.sqrt(svs), mode_r, mode_f
+        return 1.0 / np.sqrt(svs), self._qi @ mode_r, self._qi @ mode_f
 
     def _set_data(self, data):
         _, _, _, r_vecs, f_vecs = data
@@ -366,7 +366,7 @@ class RandomizedResolventMode(ResolventMode):
         U, Sigma, Vapp = sp.linalg.svd(matUS.conj(), full_matrices=False)
         V = V.T.conj() @ Vapp.T.conj()
 
-        return Sigma, U, V
+        return Sigma, self._qi @ U, self._qi @ V
 
 
 class ResolventTest(RandomizedResolventMode):
@@ -395,14 +395,13 @@ class ResolventTest(RandomizedResolventMode):
 
 class RHS(FieldData):
     def __init__(self, mesh, field, mu, pr, is2d=False):
-        super(RHS, self).__init__(mesh, n_val=5, data_list=['Rho', 'RhoU', 'RhoV', 'RhoW', 'E'])
+        super(RHS, self).__init__(mesh, n_val=5, data_list=['Rho', 'U', 'V', 'W', 'T'])
 
-        self.rhs_ns = NS(mesh, field, mu, pr, is2d)
-        self._calculate()
+        self.rhs_ns = LNS(mesh, field, mu, pr, is2d)
 
     def _init_field(self, *args, **kwargs):
         self.data = np.empty((self.n_cell, self.n_val), dtype=np.float64)
 
-    def _calculate(self):
+    def calculate(self, data):
         for i_cell in range(self.n_cell):
-            self.data[i_cell] = self.rhs_ns.formula(i_cell)
+            self.data[i_cell] = self.rhs_ns.formula(data, i_cell)
