@@ -289,7 +289,7 @@ class ResolventMode(ModalData):
 
         print('Singular values: ', np.sqrt(svs))
         # print('Gains: ', 1.0 / np.sqrt(svs))
-        return 1.0 / np.sqrt(svs), mode_r, mode_f
+        return 1.0 / np.sqrt(svs), self._qi @ mode_r, self._qi @ mode_f
 
     def _set_data(self, data):
         _, _, _, r_vecs, f_vecs = data
@@ -366,7 +366,7 @@ class RandomizedResolventMode(ResolventMode):
         U, Sigma, Vapp = sp.linalg.svd(matUS.conj(), full_matrices=False)
         V = V.T.conj() @ Vapp.T.conj()
 
-        return Sigma, U, V
+        return Sigma, self._qi @ U, self._qi @ V
 
 
 class RHS(FieldData):
