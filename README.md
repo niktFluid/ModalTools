@@ -4,6 +4,8 @@ This codes construct a linear operator from a field data of compressible fluid f
 
 ## Description
 
+ModalTools is a tool for constructing and analyzing a linearized Navier-Stokes (LNS) operator in a modal manner. The project contains necessary codes for estimating the Right-Hand-Side of LNS equation and a matrix generator that uses so-called zero-one trick for making a sparse matrix representing LNS operator. The operator can be used for modal analysis including linear stability analysis and resolvent analysis (See [here](https://doi.org/10.2514/1.J056060)). We also provide a low Reynolds number compressible cylinder flow data via OpenFOAM for the demonstration.
+
 ## Demo
 
 ## Requirements
@@ -14,8 +16,6 @@ This codes construct a linear operator from a field data of compressible fluid f
 * [mpi4py](https://mpi4py.readthedocs.io/en/stable/) - Optional but recommended.
 
 ## Usage
-
-## Install
 
 ## Author
 
