@@ -1,36 +1,36 @@
 #  -------------  Default profiles -------------
-[GenerateOperatorDefault]
+[GenerateOperator]
 CaseDir = CylinderFlow/
-TimeDir = 1/
-Operator = CylinderFlow/Operators/matL.npz
+TimeDir = 1000/
+Operator = CylinderFlow/matL.npz
 Viscosity = 1.333333e-3
 PrandtlNumber = 0.7
 
-[StabilityDefault]
+[Stability]
 Mode = Stability
 CaseDir = CylinderFlow/
-TimeDir = 1/
-Operator = CylinderFlow/Operators/matL.npz
-SaveName = CylinderFlow/Results/linear_stability
+TimeDir = 1000/
+Operator = CylinderFlow/matL.npz
+SaveName = CylinderFlow/stability
 ModeNum = 4
 SigmaRealStart = 0.01
 SigmaRealEnd = 0.01
 SigmaRealNum = 1
 SigmaImagStart = 0.0
 SigmaImagEnd = 1.0
-SigmaImagNum = 100
+SigmaImagNum = 26
 Which = LM
 
 [ResolventDefault]
 Mode = Stability
 CaseDir = CylinderFlow/
-TimeDir = 1/
-Operator = CylinderFlow/Operators/matL.npz
-SaveName = CylinderFlow/Results/resolvent
+TimeDir = 1000/
+Operator = CylinderFlow/matL.npz
+SaveName = CylinderFlow/resolvent
 ModeNum = 3
 OmegaStart = 0.0
 OmegaEnd = 1.0
-OmegaNum = 100
+OmegaNum = 26
 AlphaStart = 0.0
 AlphaEnd = 0.0
 AlphaNum = 1
