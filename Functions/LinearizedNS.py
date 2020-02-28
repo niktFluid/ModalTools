@@ -3,12 +3,12 @@ import numpy as np
 import math
 
 from Functions.Variables import Variables
-from Functions.BoundaryCondition import BoundaryCondition as BDcond
+# from Functions.BoundaryCondition import BoundaryCondition as BDcond
 from Functions.Gradient import Gradient
 
 
 class LNS(Variables):  # Linearized Navier-Stokes equations
-    def __init__(self, mesh, ave_field, mu, pr, grad_type='GLSQ', is2d=False):
+    def __init__(self, mesh, bd_cond, ave_field, mu, pr, grad_type='GLSQ'):
         self.gamma = 1.4
         self.gamma_1 = 1.0 / (1.4 - 1.0)
         self.gamma_inv = 1.0 / 1.4
@@ -20,9 +20,9 @@ class LNS(Variables):  # Linearized Navier-Stokes equations
         self.n_val = ave_field.n_val
 
         self.mesh = mesh
-        self.bd_cond = BDcond(mesh, is2d=is2d)
+        self.bd_cond = bd_cond
 
-        self._grad = Gradient(mesh, grad_type=grad_type, is2d=is2d)
+        self._grad = Gradient(mesh, bd_cond, grad_type=grad_type)
         sub_list = [self._grad]
 
         super(LNS, self).__init__(mesh, n_return=5, sub_list=sub_list)
