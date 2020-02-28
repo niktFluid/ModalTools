@@ -332,13 +332,13 @@ class ResolventMode(ModalData):
 
 
 class RandomizedResolventMode(ResolventMode):
-    def __init__(self, mesh, ave_field, operator, n_val=5, k=6, mode='Both', **kwargs):
+    def __init__(self, mesh, bd_cond, ave_field, operator, n_val=5, k=6, mode='Both', **kwargs):
         super(RandomizedResolventMode, self).__init__(mesh, ave_field, operator, n_val, k, mode, **kwargs)
 
-        self._scaling = self._get_scaling_factor(ave_field.data)
+        self._scaling = self._get_scaling_factor(ave_field.data, bd_cond)
 
-    def _get_scaling_factor(self, ave_data):
-        grad = Gradient(self.mesh)
+    def _get_scaling_factor(self, ave_data, bd_cond):
+        grad = Gradient(self.mesh, bd_cond)
 
         grad_vel = np.zeros((self.n_cell, 3, 3), dtype=np.float64)
         for i_cell, i_val in product(range(self.n_cell), [1, 2, 3]):

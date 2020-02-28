@@ -2,14 +2,14 @@ import math
 import numpy as np
 from scipy import linalg
 
-from Functions.BoundaryCondition import BoundaryCondition as BDcond
+# from Functions.BoundaryCondition import BoundaryCondition as BDcond
 from Functions.Variables import Variables
 
 
 class Gradient(Variables):
-    def __init__(self, mesh, grad_type='GLSQ', is2d=False):
+    def __init__(self, mesh, bd_cond, grad_type='GLSQ'):
         super(Gradient, self).__init__(mesh, n_return=3)
-        self.bd_cond = BDcond(mesh, is2d)
+        self.bd_cond = bd_cond
 
         self._grad_type = grad_type
         self._beta = None
