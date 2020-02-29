@@ -118,4 +118,4 @@ This project is licensed under the [MIT License](https://github.com/tcnksm/tool/
 
 ## 謝辞
 
-本コードはUCLAの[平研究室](http://www.seas.ucla.edu/fluidflow/group.html)訪問時に作成し，メンバーには様々な議論やアドバイスを頂きました．ここに記して感謝致します．
+本コードはUCLAの[平研究室](http://www.seas.ucla.edu/fluidflow/index.html)訪問時に作成し，メンバーには様々な議論やアドバイスを頂きました．ここに記して感謝致します．

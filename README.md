@@ -117,4 +117,4 @@ This project is licensed under the [MIT License](https://github.com/tcnksm/tool/
 
 ## Acknowledgments
 
-The author gratefully acknowledge members of [Taira laboratory](http://www.seas.ucla.edu/fluidflow/group.html) for insightful comments and discussions on the implementations.
+The author gratefully acknowledge members of [Taira laboratory](http://www.seas.ucla.edu/fluidflow/index.html) for insightful comments and discussions on the implementations.
