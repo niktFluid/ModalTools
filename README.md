@@ -90,7 +90,7 @@ Which = LM
 
 ```
 [ResolventDefault]
-Mode = Stability
+Mode = RandomizedResolvent
 CaseDir = CylinderFlow/
 TimeDir = 1000/
 Operator = CylinderFlow/matL.npz
