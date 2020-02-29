@@ -33,15 +33,15 @@ The other feature implemented on the codes involves with a pseudospectrum of a l
 We will provide instructions about how to use this codes when we use OpenFOAM and solving compressible Navier-Stokes equations. Please note that we assumes the variables used in the simulation and codes are normalized as following equations.
 
 <img src="https://latex.codecogs.com/gif.latex?x&space;=&space;\frac{\widetilde{x}}{L},&space;\:&space;y&space;=&space;\frac{\widetilde{y}}{L},&space;\:&space;z&space;=&space;\frac{\widetilde{z}}{L}">
-<img src="\rho = \frac{\widetilde{\rho}}{\rho_\infty}, \: u = \frac{\widetilde{u}}{a_\infty}, \: T = \frac{\widetilde{T}}{T_\infty}">
+<img src="https://latex.codecogs.com/gif.latex?x&space;=&space;\rho = \frac{\widetilde{\rho}}{\rho_\infty}, \: u = \frac{\widetilde{u}}{a_\infty}, \: T = \frac{\widetilde{T}}{T_\infty}">
 
 Here, x, y, z are position, <img src="https://latex.codecogs.com/gif.latex?\rho"> is density, u is velocity, T is temperature and a is the speed of sound. Subscript <img src="https://latex.codecogs.com/gif.latex?\infty"> indicates far-field variables. The easiest way to get this normalized field is to set constant pressure specific heat <img src="https://latex.codecogs.com/gif.latex?c_p"> and molar mass <img src="https://latex.codecogs.com/gif.latex?M"> as <img src="https://latex.codecogs.com/gif.latex?c_p=2.5">, <img src="https://latex.codecogs.com/gif.latex?M=11640.3"> as you can find in [thermophysical settings of CylinderFlow case](CylinderFlow/constant/thermophysicalProperties). 
 
 Please make sure that the simulation case has time averaged data of each variables (CylinderFlow/1000/*Mean) as like [this directory](CylinderFlow/1000). The codes also need data of center  position (CylinderFlow/1000/C) and volume (CylinderFlow/1000/C) of each computational cells. You can get these data by using following commands in the case directory.
-'''
+```
 postProcess -funcs writeCellCentres 
 postProcess -funcs writeCellVolumes
-'''
+```
 
 
 ### Generating Operator
