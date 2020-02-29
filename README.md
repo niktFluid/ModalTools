@@ -19,7 +19,7 @@ Solving an eigenvalue problem of the operator provides a spectrum that represent
 
 * **Resolvent Analysis**
 
-The other feature implemented on the codes involve with a pseudospectrum of a liner operator.
+The other feature implemented on the codes involves with a pseudospectrum of a liner operator. The resolvent analysis can be understood in the context that an analysis of harmonic input forcing and output structure of the linear systems. Singular Value Decomposition (SVD) of the operator delivers pairs of orthogonal basis correspond to the forcing,￿ response modes of the operator and energy amplitude ratio (gain) between them. The following picture shows distribution of three largest gains over frequency and resolvent modes correspond to the shedding frequency. The leading gain shows its highest value at the shedding frequency since the phenomenon comes from fluid dynamic unsteadiness. The response modes shows vortex shedding like structure while the forcing is looked like some sort of velocity fluctuations in the vicinity of the cylinder walls. We also provides an implementation of [randomized resolvent analysis](https://arxiv.org/abs/1902.01458) that makes your assessments faster.
 
 ![Figure3](https://user-images.githubusercontent.com/47338366/75595182-2bf36680-5a40-11ea-8814-381d05360ef8.png)
 
@@ -32,6 +32,10 @@ The other feature implemented on the codes involve with a pseudospectrum of a li
 * [mpi4py](https://mpi4py.readthedocs.io/en/stable/) - Optional but recommended.
 
 ## Usage
+* **Generating Operator**
+
+
+* **Stability or Resolvent Analysis**
 
 
 
