@@ -8,6 +8,7 @@ from mpi4py import MPI
 
 from Functions.Mesh import OfMesh
 from Functions.FieldData import OfData
+from Functions.BoundaryCondition import OFBC
 
 from Functions.MatMaker import MatMaker
 from Functions.LinearizedNS import LNS
@@ -37,9 +38,10 @@ def MakeOperator(case_dir, time, filename, mu, pr):
     comm = MPI.COMM_WORLD
 
     mesh = OfMesh(case_dir, time + 'C', time + 'V', time + 'U', time + 'p')
+    bd_cond = OFBC(mesh, is2d=True)
     ave_field = OfData(mesh, case_dir + time, 'UMean', 'pMean', 'rhoMean', add_e=True, add_pres=True)
 
-    linear_ns = LNS(mesh, ave_field, mu=mu, pr=pr, grad_type='GLSQ', is2d=True)  # viscosity and Prandtl number
+    linear_ns = LNS(mesh, bd_cond, ave_field, mu=mu, pr=pr, grad_type='GLSQ')  # viscosity and Prandtl number
 
     mat_maker = MatMaker(linear_ns, mesh.n_cell, ave_field=ave_field, mpi_comm=comm)
     mat_maker.make_mat()
