@@ -43,6 +43,8 @@ postProcess -funcs writeCellCentres
 postProcess -funcs writeCellVolumes
 ```
 
+We guess we have to mention that Ofpp module which is used to parse OpenFOAM data works well only `writeFormat` option in [controlDict](CylinderFlow/system/controlDict) is set as `ascii` in our trial. If you have a problem regarding the parsing process in Ofpp, please try to convert your data into binary format by using `foamFormatConvert` with set `writeFormat` as `binary` and reconvert them into ascii format.
+
 
 ### Generating Operator
 You can use [GenerateOperator.py](GenerateOperator.py) (for serial computation) or [GenerateOperatorMPI.py](GenerateOperatorMPI.py) (for parallel computation) for generating the operator. 
