@@ -50,7 +50,7 @@ We guess we should mention that Ofpp module which is used to parse OpenFOAM data
 You can use [GenerateOperator.py](GenerateOperator.py) (for serial computation) or [GenerateOperatorMPI.py](GenerateOperatorMPI.py) (for parallel computation) for generating the operator. 
 ```
 python3 GenerateOperator.py -f [Parameter file name] -p [Parameter name]
-mpiexec -np [Number of thread] python3 GenerateOperator.py -f [Parameter file name] -p [Parameter name]
+mpiexec -np [Number of thread] python3 GenerateOperatorMPI.py -f [Parameter file name] -p [Parameter name]
 ```
 
 You can find an example of parameter in [Parameters.dat](Parameters.dat).
@@ -65,10 +65,10 @@ PrandtlNumber = 0.7
 
 
 ### Stability or Resolvent Analysis
-[CalcMode.py](CalcMode.py) or [CalcModeMPI.py](CalcModeMPI.py) provide basic functions for stability or resolvent analysis.
+[CalcMode.py](CalcMode.py) or [CalcModeMPI.py](CalcModeMPI.py) provide basic functions for stability or resolvent analysis. The code output TecPlot ASCII format file (*.dat) for visualization and binary files (*.pickle) for data saving. You will also get text files which have data of eigenvalues or gains.
 ```
 python3 CalcMode.py -f [Parameter file name] -p [Parameter name]
-mpiexec -np [Number of thread] python3 CalcMode.py -f [Parameter file name] -p [Parameter name]
+mpiexec -np [Number of thread] python3 CalcModeMPI.py -f [Parameter file name] -p [Parameter name]
 ```
 
 ```

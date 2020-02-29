@@ -7,7 +7,7 @@
 
 
 ## デモ
-2次元円柱周り流れのシミュレーションデータを用いた，本コードの簡単なデモンストレーションを紹介します．流ればの気流条件は<img src="https://latex.codecogs.com/gif.latex?Re=150">, <img src="https://latex.codecogs.com/gif.latex?M_\infty=0.2">としています. シミュレーションはOpenFOAMを用いて実行しました. 上記の条件でシミュレーションを実施した場合，円柱背後にはカルマン渦列が形成され，その振動周波数はストローハル数で<img src="https://latex.codecogs.com/gif.latex?St=0.178">になります. 時間平均流れ場を用いてLNSオペレータを構築し，安定性解析とレゾルベント解析を実施します．
+2次元円柱周り流れのシミュレーションデータを用いた，本コードの簡単なデモンストレーションを紹介します．流れ場の気流条件は<img src="https://latex.codecogs.com/gif.latex?Re=150">, <img src="https://latex.codecogs.com/gif.latex?M_\infty=0.2">としています. シミュレーションはOpenFOAMを用いて実行しました. 上記の条件でシミュレーションを実施した場合，円柱背後にはカルマン渦列が形成され，その振動周波数はストローハル数で<img src="https://latex.codecogs.com/gif.latex?St=0.178">になります. 時間平均流れ場を用いてLNSオペレータを構築し，安定性解析とレゾルベント解析を実施します．
 
 ![Figure1-1](https://user-images.githubusercontent.com/47338366/75612946-26982980-5add-11ea-97c5-cc24cd3bc953.png)
 
@@ -39,7 +39,7 @@ OpenFOAMを用いて圧縮性流れ場の計算を実施したと仮定して，
 
 ここで, x, y, z は位置座標，<img src="https://latex.codecogs.com/gif.latex?\rho"> は密度，<img src="https://latex.codecogs.com/gif.latex?u"> は速度ベクトル，<img src="https://latex.codecogs.com/gif.latex?T"> は温度， <img src="https://latex.codecogs.com/gif.latex?a">は音速です．添字 <img src="https://latex.codecogs.com/gif.latex?\infty"> は一様流における値を表しています．OpenFOAMにおいて上記の無次元化を実施する場合は，等圧比熱<img src="https://latex.codecogs.com/gif.latex?c_p"> とモル質量 <img src="https://latex.codecogs.com/gif.latex?M"> を <img src="https://latex.codecogs.com/gif.latex?c_p=2.5">, <img src="https://latex.codecogs.com/gif.latex?M=11640.3"> と設定するのが最も簡単と思われます ([こちら](CylinderFlow/constant/thermophysicalProperties)の設定ファイルをご覧下さい). 
 
-LNSオペレータを構築するには，時間平均流れ場 (`CylinderFlow/1000/*Mean`) をあらかじめ計算しておく必要があります ([例](CylinderFlow/1000)). また，本コードではセル中心座標 (`CylinderFlow/1000/C`) とセル体積 (`CylinderFlow/1000/V`) をLNSオペレータの構築に使用しています．これらのデータはOpenFOAMのケースディレクトリ内で以下のコマンドを実施することで取得できます．
+LNSオペレータを構築するには，時間平均流れ場 (`CylinderFlow/1000/*Mean`) をあらかじめ計算しておく必要があります ([例](CylinderFlow/1000)). また，本コードではセル中心座標 (`CylinderFlow/1000/C`) とセル体積 (`CylinderFlow/1000/V`) をLNSオペレータの構築に使用しています．これらのデータはOpenFOAMのケースディレクトリ内で以下のコマンドを実行することで取得できます．
 ```
 postProcess -funcs writeCellCentres 
 postProcess -funcs writeCellVolumes
@@ -51,7 +51,7 @@ postProcess -funcs writeCellVolumes
 ### オペレータの生成
 ```
 python3 GenerateOperator.py -f [Parameter file name] -p [Parameter name]
-mpiexec -np [Number of thread] python3 GenerateOperator.py -f [Parameter file name] -p [Parameter name]
+mpiexec -np [Number of thread] python3 GenerateOperatorMPI.py -f [Parameter file name] -p [Parameter name]
 ```
 
 パラメータファイル ([Parameters.dat](Parameters.dat))の設定例を下記に示します.
@@ -66,9 +66,10 @@ PrandtlNumber = 0.7
 
 
 ### モード解析
+以下のコマンドを実行すると可視化用のTecPlot ASCII形式ファイル (*.dat) とデータ保存用のバイナリファイル (*.pickle) が出力されます．また，安定性解析を実施した場合は固有値，レゾルベント解析の実施時にはゲインがテキストファイルとして出力されます．
 ```
 python3 CalcMode.py -f [Parameter file name] -p [Parameter name]
-mpiexec -np [Number of thread] python3 CalcMode.py -f [Parameter file name] -p [Parameter name]
+mpiexec -np [Number of thread] python3 CalcModeMPI.py -f [Parameter file name] -p [Parameter name]
 ```
 
 ```
