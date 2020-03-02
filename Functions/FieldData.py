@@ -4,8 +4,16 @@ import Ofpp
 
 class FieldData:
     def __init__(self, mesh, n_val=5, data_list=None):
+        """
+        Holds and visualize field data.
+
+        :param mesh: Mesh class.
+        :param n_val: Number of variables.
+        :param data_list: List of variable names.
+        """
+
         if data_list is None:
-            self.data_list = ['rho', 'u', 'v', 'w', 'T']
+            self.data_list = ['rho', 'u', 'v', 'w', 'T']  # Default names.
         else:
             self.data_list = data_list
 
@@ -17,37 +25,63 @@ class FieldData:
         self._init_field()
 
     def _init_field(self, *args, **kwargs):
+        """
+        Initialize field data.
+        """
+
         raise NotImplementedError
 
     def vis_tecplot(self, file_name='Default.dat'):
+        """
+        Generate TecPlot ASCII format file for the visualization.
+
+        :param file_name: Name of output file.
+        """
+
         header = self._make_tec_header()
         with open(file_name, mode='w') as file_obj:
             def write_data(w_data):
-                for w_list in self._make_write_list(w_data):
+                for w_list in self._make_write_list(w_data):  # Generate and write data line by line.
                     file_obj.writelines(list(map(lambda x: str(x) + ' ', w_list)) + ['\n'])
 
             file_obj.write(header)
+
+            # Write node data.
             for ind in range(3):
                 write_data(self.mesh.nodes[:, ind])
+
+            # Write field data.
             for ind in range(self.n_val):
                 write_data(self.data[:, ind])
+
+            # Write connectivity data for TecPlot.
             for connectivity in self._make_connectivity():
                 c_list = list(map(lambda x: str(x) + ' ', connectivity))
                 file_obj.writelines(c_list + ['\n'])
 
     def _make_tec_header(self):
+        """
+        Make header data for TecPlot.
+
+        :return: Header
+        """
+
         header = 'Title = "Data" \n'
         header += 'Variables = "x"\n"y"\n"z"\n' + '\n'.join(['"' + x + '"' for x in self.data_list]) + '\n'
         header += 'Zone T = "Fluid area" \n'
-        # header += 'StrandID=1, SolutionTime=' + str(self.sol_time) + ' \n'
         header += 'Nodes=' + str(self.mesh.n_node) + ' \n'
         header += 'Elements=' + str(self.mesh.n_cell) + ' \n'
         header += 'DATAPACKING=BLOCK \nZONETYPE=FEBrick \n'
         header += 'VARLOCATION=([4-' + str(self.n_val + 3) + ']=CELLCENTERED) \n'
+
         return header
 
     def _make_connectivity(self):
-        # This subroutine should be modified for clarify.
+        """
+        Generate connectivity data for TecPlot.
+        This subroutine should be modified for clarify.
+        """
+
         mesh = self.mesh
         for faces in mesh.cell_faces:
             nodes = set(sum([mesh.face_nodes[x] for x in faces], []))
@@ -97,6 +131,14 @@ class FieldData:
 
     @staticmethod
     def _make_write_list(data, n_line=8):
+        """
+        Generate and write data line by line.
+
+        :param data: Data to be wrote.
+        :param n_line: Number of data on each lines.
+        :return: Data for each lines.
+        """
+
         n_data = data.size
         w_data = data.reshape(n_data)
 
@@ -115,6 +157,16 @@ class FieldData:
 
 class FlowData(FieldData):
     def __init__(self, mesh, add_e=False, add_pres=False, data_list=None):
+        """
+        Hold flow field data.
+        The variables are assures to be normalized by farfield values of density, speed of sound and temperature.
+
+        :param mesh: Mesh class.
+        :param add_e: Flag to add energy variables.
+        :param add_pres: Flag to add pressure variables.
+        :param data_list: List of variables name.
+        """
+
         super(FlowData, self).__init__(mesh, data_list=data_list)
 
         if add_pres:
@@ -165,6 +217,18 @@ class FlowData(FieldData):
 
 class OfData(FlowData):
     def __init__(self, mesh, path_dir, path_u, path_p, path_rho, add_e=False, add_pres=False):
+        """
+        Hold and visualize OpenFOAM flow field data.
+
+        :param mesh: Mesh class.
+        :param path_dir: Path for the case directory.
+        :param path_u: Path for velocity data￿.
+        :param path_p: Path for pressure data.
+        :param path_rho: Path for density data.
+        :param add_e: Flag to add energy data.
+        :param add_pres: Flag to add pressure data.
+        """
+
         self.path_dir = path_dir
         self.path_u = path_u
         self.path_p = path_p
@@ -193,12 +257,21 @@ class OfData(FlowData):
         t_data = 1.4 * p_data / rho_data
 
         self.n_cell = u_data.shape[0]
-        # self.data = np.hstack((rho_data[:, np.newaxis], u_data, p_data[:, np.newaxis]))
         self.data = np.hstack((rho_data[:, np.newaxis], u_data, t_data[:, np.newaxis]))
 
 
 class OfConData(FlowData):
     def __init__(self, mesh, path_dir, path_u, path_p, path_rho):
+        """
+        Hold and visualize OpenFOAM flow field data with conservative variables.
+
+        :param mesh: Mesh class.
+        :param path_dir: Path for the case directory.
+        :param path_u: Path for velocity data￿.
+        :param path_p: Path for pressure data.
+        :param path_rho: Path for density data.
+        """
+
         self.path_dir = path_dir
         self.path_u = path_u
         self.path_p = path_p
@@ -235,5 +308,4 @@ class OfConData(FlowData):
         e = p_data / (1.4 - 1.0) + 0.5 * rho_data * (u * u + v * v + w * w)
 
         self.n_cell = u_data.shape[0]
-        # self.data = np.hstack((rho_data[:, np.newaxis], u_data, p_data[:, np.newaxis]))
         self.data = np.vstack((rho_data, ru, rv, rw, e)).T
