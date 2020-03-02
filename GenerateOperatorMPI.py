@@ -35,7 +35,7 @@ def main(param_file='Parameter.dat', profile='Default'):
 
 
 def MakeOperator(case_dir, time, filename, mu, pr):
-    comm = MPI.COMM_WORLD
+    comm = MPI.COMM_WORLD  # Create MPI communicator.
 
     mesh = OfMesh(case_dir, time + 'C', time + 'V', time + 'U', time + 'p')
     bd_cond = OFBC(mesh, is2d=True)
