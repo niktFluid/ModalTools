@@ -3,6 +3,15 @@ import numpy as np
 
 class BoundaryCondition:
     def __init__(self, mesh, bd_dict, is2d=False, key_2d=None):
+        """
+        Abstract class for boundary conditions.
+
+        :param mesh: Mesh class.
+        :param bd_dict: Dictionary contains boundary name and functions.
+        :param is2d: Flag to apply 2D mode.
+        :param key_2d: Specify name of boundary name which is used for 2D boundaries.
+        """
+
         self.mesh = mesh
         self.bd_dict = bd_dict
 
@@ -19,24 +28,26 @@ class BoundaryCondition:
         if self.is2d and bd_type == self.key_2d:
             return self._bd_2d(val_vec, id_face)
         else:
+            # Convert velocity vector from global coordinate to face oriented coordinate.
             vec_loc = self.mesh.g2l_vel(val_vec, id_face)
-            bd_func = self._select_bd_func(bd_type)
+            bd_func = self.bd_dict[bd_type]
             bd_vec_loc = bd_func(vec_loc, id_face)
 
             return self.mesh.l2g_vel(bd_vec_loc, id_face)
-
-    def _select_bd_func(self, bd_type):
-        return self.bd_dict[bd_type]
 
     def _bd_2d(self, val_vec, id_face):
         raise NotImplementedError
 
 
 class OFBC(BoundaryCondition):
-    """
-    This class provides boundary conditions for OpenFOAM data.
-    """
     def __init__(self, mesh, is2d=False):
+        """
+        This class provides boundary conditions for OpenFOAM data.
+
+        :param mesh: Mesh class.
+        :param is2d: Flag to apply 2D mode.
+        """
+
         bd_dict = {
             'wall': self._bd_wall,
             'patch': self._bd_0th_ex,
