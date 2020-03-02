@@ -14,7 +14,7 @@ class Gradient(Variables):
 
         :param mesh: Class contains computational grid and related methods.
         :param bd_cond: Class for boundary condition.
-        :param grad_type:   GG - Green gauss method.
+        :param grad_type:   GG - Green Gauss method.
                             LS - Weighted least square method.
                             GLSQ - Hybrid method of GG and LS.
         """

@@ -4,8 +4,15 @@ import itertools
 
 class Variables:
     def __init__(self, mesh, n_return=1, sub_list=None):
+        """
+        Abstract class for equations.
+
+        :param mesh: Mesh class.
+        :param n_return: Number of variables that is returned for calculations on each cells.
+        :param sub_list: List of subclass of Variables that is used for calculating.
+        """
+
         self.mesh = mesh
-        # self.flow_data = flow_data
 
         self.leave_list = None
         self._sub_list = sub_list
@@ -20,6 +27,13 @@ class Variables:
                 raise TypeError('"sub_list" must contains only sub classes of "Variables".')
 
     def get_leaves(self, id_cell):
+        """
+        Return list of cells which are referenced to calculate function values.
+
+        :param id_cell: Target cell ID.
+        :return: List of cells.
+        """
+
         my_ref_cells = self._return_ref_cells(id_cell)
 
         sub_ref_cells = []
@@ -32,7 +46,23 @@ class Variables:
         return self.leave_list
 
     def formula(self, data, id_cell, **kwargs):
+        """
+        Specific formulation for equations as a function of data and cell ID.
+
+        :param data: Input vector of the functions.
+        :param id_cell: Target cell ID.
+        :param kwargs: Options
+        :return: Calculated values.
+        """
         raise NotImplementedError
 
     def _return_ref_cells(self, id_cell):
+        """
+        Return list of cells which are 'directory' referenced from this class for calculation.
+        For this class, the list contains the target cell and the adjoined cells.
+
+        :param id_cell: Target cell.
+        :return: List of cell.
+        """
+
         raise NotImplementedError
