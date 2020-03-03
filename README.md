@@ -33,6 +33,7 @@ The other feature implemented in ModalTools involves the pseudospectrum of a lin
 The author will provide instructions about how to use this codes when using OpenFOAM to solve the compressible Navier-Stokes equations. Please note that the current version only supports a hexahedra cells mesh. ModalTools assumes the variables used in the simulation and codes are normalized as following.
 
 <img src="https://latex.codecogs.com/gif.latex?x&space;=&space;\frac{\widetilde{x}}{L},&space;\:&space;y&space;=&space;\frac{\widetilde{y}}{L},&space;\:&space;z&space;=&space;\frac{\widetilde{z}}{L}">, 
+
 <img src="https://latex.codecogs.com/gif.latex?\rho&space;=&space;\frac{\widetilde{\rho}}{\rho_\infty},&space;\:&space;u&space;=&space;\frac{\widetilde{u}}{a_\infty},&space;\:&space;T&space;=&space;\frac{\widetilde{T}}{T_\infty}">.
 
 Here, x, y, z are position, <img src="https://latex.codecogs.com/gif.latex?\rho"> is density, <img src="https://latex.codecogs.com/gif.latex?u"> is velocity, <img src="https://latex.codecogs.com/gif.latex?T"> is temperature and <img src="https://latex.codecogs.com/gif.latex?a"> is the speed of sound. The subscript <img src="https://latex.codecogs.com/gif.latex?\infty"> indicates far-field variables. The easiest way to get this normalized field is to set constant pressure specific heat <img src="https://latex.codecogs.com/gif.latex?c_p"> and molar mass <img src="https://latex.codecogs.com/gif.latex?m"> as <img src="https://latex.codecogs.com/gif.latex?c_p=2.5">, <img src="https://latex.codecogs.com/gif.latex?m=11640.3"> as you can find in [thermophysical settings of the CylinderFlow case](CylinderFlow/constant/thermophysicalProperties). 
@@ -112,7 +113,7 @@ ResolventMode = Both
 
 ## Licence
 
-This project is licensed under the [MIT License](https://github.com/tcnksm/tool/blob/master/LICENCE) - see the [LICENSE.md](LICENSE) file for details
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details
 
 
 ## Acknowledgments
