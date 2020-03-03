@@ -1,6 +1,6 @@
 # ModalTools
 圧縮性時間平均流れ場に関する線形Navier-Stokesオペレータの構築とモード解析用のコードです．
-
+(Click [here](README.md) for English version.)
 
 ## 概要
 このコードでは，線形化Navier-Stokes (LNS) オペレータの構築とその分析 (モード解析) を行うことができます．プロジェクトにはLNS方程式の右辺を評価するサブルーチンと，行列表現されたLNSオペレータを生成するコード (いわゆるzero-oneトリックを使用しています) ，および全体安定性解析やレゾルベント解析 ([参考文献](https://doi.org/10.2514/1.J056060)) 用のコードが含まれています．プロジェクトには，デモンストレーション用に[OpenFOAM](https://www.openfoam.com/)による[2次元円柱周り流れのシミュレーションデータ](CylinderFlow)が付属していますので，これらの解析を手軽に試すことができます．
@@ -34,10 +34,11 @@
 ## 使用法
 OpenFOAMを用いて圧縮性流れ場の計算を実施したと仮定して，本コードの使用法を説明します．なお，本コードは現在のところ，六面体格子の結果しかサポートしておりません．本コードでは流れ場の変数は次の式で無次元化されていると仮定しています．
 
-<img src="https://latex.codecogs.com/gif.latex?x&space;=&space;\frac{\widetilde{x}}{L},&space;\:&space;y&space;=&space;\frac{\widetilde{y}}{L},&space;\:&space;z&space;=&space;\frac{\widetilde{z}}{L}">
-<img src="https://latex.codecogs.com/gif.latex?\rho&space;=&space;\frac{\widetilde{\rho}}{\rho_\infty},&space;\:&space;u&space;=&space;\frac{\widetilde{u}}{a_\infty},&space;\:&space;T&space;=&space;\frac{\widetilde{T}}{T_\infty}">
+<img src="https://latex.codecogs.com/gif.latex?x&space;=&space;\frac{\widetilde{x}}{L},&space;\:&space;y&space;=&space;\frac{\widetilde{y}}{L},&space;\:&space;z&space;=&space;\frac{\widetilde{z}}{L}">, 
 
-ここで, x, y, z は位置座標，<img src="https://latex.codecogs.com/gif.latex?\rho"> は密度，<img src="https://latex.codecogs.com/gif.latex?u"> は速度ベクトル，<img src="https://latex.codecogs.com/gif.latex?T"> は温度， <img src="https://latex.codecogs.com/gif.latex?a">は音速です．添字 <img src="https://latex.codecogs.com/gif.latex?\infty"> は一様流における値を表しています．OpenFOAMにおいて上記の無次元化を実施する場合は，等圧比熱<img src="https://latex.codecogs.com/gif.latex?c_p"> とモル質量 <img src="https://latex.codecogs.com/gif.latex?M"> を <img src="https://latex.codecogs.com/gif.latex?c_p=2.5">, <img src="https://latex.codecogs.com/gif.latex?M=11640.3"> と設定するのが最も簡単と思われます ([こちら](CylinderFlow/constant/thermophysicalProperties)の設定ファイルをご覧下さい). 
+<img src="https://latex.codecogs.com/gif.latex?\rho&space;=&space;\frac{\widetilde{\rho}}{\rho_\infty},&space;\:&space;u&space;=&space;\frac{\widetilde{u}}{a_\infty},&space;\:&space;T&space;=&space;\frac{\widetilde{T}}{T_\infty}">.
+
+ここで, x, y, z は位置座標，<img src="https://latex.codecogs.com/gif.latex?\rho"> は密度，<img src="https://latex.codecogs.com/gif.latex?u"> は速度ベクトル，<img src="https://latex.codecogs.com/gif.latex?T"> は温度， <img src="https://latex.codecogs.com/gif.latex?a">は音速です．添字 <img src="https://latex.codecogs.com/gif.latex?\infty"> は一様流における値を表しています．OpenFOAMにおいて上記の無次元化を実施する場合は，等圧比熱<img src="https://latex.codecogs.com/gif.latex?c_p"> とモル質量 <img src="https://latex.codecogs.com/gif.latex?m"> を <img src="https://latex.codecogs.com/gif.latex?c_p=2.5">, <img src="https://latex.codecogs.com/gif.latex?m=11640.3"> と設定するのが最も簡単と思われます ([こちら](CylinderFlow/constant/thermophysicalProperties)の設定ファイルをご覧下さい). 
 
 LNSオペレータを構築するには，時間平均流れ場 (`CylinderFlow/1000/*Mean`) をあらかじめ計算しておく必要があります ([例](CylinderFlow/1000)). また，本コードではセル中心座標 (`CylinderFlow/1000/C`) とセル体積 (`CylinderFlow/1000/V`) をLNSオペレータの構築に使用しています．これらのデータはOpenFOAMのケースディレクトリ内で以下のコマンドを実行することで取得できます．
 ```
@@ -108,12 +109,12 @@ ResolventMode = Both
 
 
 ## 作者
-* **Yoimi Kojima** - [niktFluid](https://github.com/niktFluid)
+* **小島 良実** - [niktFluid](https://github.com/niktFluid)
 
 
 ## ライセンス
 
-This project is licensed under the [MIT License](https://github.com/tcnksm/tool/blob/master/LICENCE) - see the [LICENSE.md](LICENSE) file for details
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details
 
 
 ## 謝辞
