@@ -1,6 +1,6 @@
 # ModalTools
 This codes constructs a linear operator from flow field data of compressible fluid flows.
-(Japanese version [here](README_JP.md).)
+(日本語版の説明は[こちら](README_JP.md)．)
 
 ## Description
 ModalTools is a tool for constructing and analyzing a linearized Navier-Stokes (LNS) operator in a modal manner. The project contains necessary codes for estimating the Right-Hand-Side of the LNS equation, as well as a matrix generator that uses the so-called zero-one trick for making a sparse matrix representation of the LNS operator. The operator can be used for modal analysis including linear stability analysis and resolvent analysis (see [here](https://doi.org/10.2514/1.J056060)). We also provide a low Reynolds number compressible cylinder flow data, obtained via [OpenFOAM](https://www.openfoam.com/), for demonstration purposes.
