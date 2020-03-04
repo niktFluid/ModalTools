@@ -14,7 +14,7 @@ from Functions.Gradient import Gradient
 
 
 class ModalData(FieldData):
-    def __init__(self, mesh, operator_name='matL.npz', n_val=5, k=10, mpi_comm=None, **kwargs):
+    def __init__(self, mesh, operator_name=None, n_val=5, k=10, mpi_comm=None, **kwargs):
         """
         Abstract class for modal analysis.
 
@@ -32,8 +32,12 @@ class ModalData(FieldData):
 
         super(ModalData, self).__init__(mesh, n_val=self._data_num(), data_list=self._data_name_list())
 
-        self.operator = self._set_operator(sparse.load_npz(operator_name), **kwargs)
-        self._vec_data = None
+        if operator_name is not None:
+            self.operator = self._set_operator(sparse.load_npz(operator_name), **kwargs)
+        else:
+            self.operator = None
+
+        self.vec_data = None
 
         self._arpack_options = {
             'k': self._k,
@@ -85,16 +89,17 @@ class ModalData(FieldData):
         :return:
         """
 
-        self._vec_data = self._calculate(**kwargs)
-        self._set_data(self._vec_data)  # Set self.data and self._vec_data for the visualization.
+        self.vec_data = self._calculate(**kwargs)
+        self._set_data(self.vec_data)  # Set self.data and self._vec_data for the visualization.
 
     def save_data(self, filename='modalData.pickle'):
         with open(filename, 'wb') as file_obj:
-            pickle.dump(self._vec_data, file_obj)
+            pickle.dump(self.vec_data, file_obj)
 
     def load_data(self, filename='modalData.pickle'):
-        self._vec_data = pickle.load(filename)
-        self._set_data(self._vec_data)
+        with open(filename, 'rb') as file_obj:
+            self.vec_data = pickle.load(file_obj)
+        self._set_data(self.vec_data)
 
     def _calculate(self, **kwargs):
         raise NotImplementedError
@@ -164,8 +169,8 @@ class LinearStabilityMode(ModalData):
             vec_list.append(vecs)
             eig_list.append(eigs)
 
-        self._vec_data = (np.hstack(eig_list), np.hstack(vec_list))
-        self._set_data(self._vec_data)
+        self.vec_data = (np.hstack(eig_list), np.hstack(vec_list))
+        self._set_data(self.vec_data)
 
     def _set_operator(self, operator, **kwargs):
         return operator
@@ -196,12 +201,12 @@ class LinearStabilityMode(ModalData):
     def save_data(self, filename='modalData.pickle'):
         save_name, _ = os.path.splitext(filename)
 
-        eigs, _ = self._vec_data
+        eigs, _ = self.vec_data
         # noinspection PyTypeChecker
         np.savetxt(save_name + '_eigs.txt', np.vstack((np.real(eigs), np.imag(eigs))).T)
 
         with open(filename, 'wb') as file_obj:
-            pickle.dump(self._vec_data, file_obj)
+            pickle.dump(self.vec_data, file_obj)
 
 
 class ResolventMode(ModalData):
@@ -226,8 +231,8 @@ class ResolventMode(ModalData):
         self._mode_r = mode == 'Both' or mode == 'Response'
 
         # Matrix for the numerical quadrature.
-        self._qi = None
-        self._qo = None
+        self.qi = None
+        self.qo = None
         self._resolvent = None
 
         super(ResolventMode, self).__init__(mesh, operator, n_val, k, mpi_comm, **kwargs)
@@ -251,8 +256,8 @@ class ResolventMode(ModalData):
                 resolvent = self._make_resolvent(omega, alpha)
                 gain, mode_r, mode_f = self._calculate(resolvent)
 
-                self._vec_data = (omega, alpha, gain, mode_r, mode_f)
-                self._set_data(self._vec_data)
+                self.vec_data = (omega, alpha, gain, mode_r, mode_f)
+                self._set_data(self.vec_data)
 
                 save_name = save_dir + '/modes_{:0=5}'.format(i_grid)
                 self.save_data(save_name + '.pickle')
@@ -337,13 +342,13 @@ class ResolventMode(ModalData):
         return data_list
 
     def _set_operator(self, operator, **kwargs):
-        self._qi, self._qo = self._get_norm_quadrature()
+        self.qi, self.qo = self._get_norm_quadrature()
         return operator
 
     def _make_resolvent(self, omega, alpha):
         eye = sparse.eye(self.operator.shape[0], dtype=np.complex128, format='csc')
         omegaI = 1.0j * (omega + 1.0j * alpha) * eye
-        return self._qo * (-omegaI - self.operator) * self._qi
+        return self.qo * (-omegaI - self.operator) * self.qi
 
     def _calculate(self, resolvent):
         svs = None
@@ -363,7 +368,7 @@ class ResolventMode(ModalData):
 
         print('Singular values: ', np.sqrt(svs))
         # print('Gains: ', 1.0 / np.sqrt(svs))
-        return 1.0 / np.sqrt(svs), self._qi @ mode_r, self._qi @ mode_f
+        return 1.0 / np.sqrt(svs), self.qi @ mode_r, self.qi @ mode_f
 
     def _set_data(self, data):
         """
@@ -467,7 +472,7 @@ class RandomizedResolventMode(ResolventMode):
         U, Sigma, Vapp = sp.linalg.svd(matUS.conj(), full_matrices=False)
         V = V.T.conj() @ Vapp.T.conj()
 
-        return Sigma, self._qi @ U, self._qi @ V
+        return Sigma, self.qi @ U, self.qi @ V
 
 
 class RHS(FieldData):
