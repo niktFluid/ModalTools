@@ -66,7 +66,7 @@ PrandtlNumber = 0.7
 
 
 ### Stability or Resolvent Analysis
-[CalcMode.py](CalcMode.py) or [CalcModeMPI.py](CalcModeMPI.py) provide basic functions for stability or resolvent analysis. The code outputs TecPlot ASCII format file (.dat) for visualization and binary files (.pickle) for data saving. You will also get text files which have data of eigenvalues or gains.
+[CalcMode.py](CalcMode.py) or [CalcModeMPI.py](CalcModeMPI.py) provide basic functions for stability or resolvent analysis. The code outputs TecPlot ASCII format file (.dat) for visualization and binary files (.pickle) for data saving. You will also get text files that have data of eigenvalues or gains, and a figure of gain plots which are cubic interpolated by using gains value and its gradients ([reference1](https://web.stanford.edu/group/ctr/Summer/SP14/08_Transition_and_turbulence/11_fosas.pdf), [reference2](https://spiral.imperial.ac.uk/handle/10044/1/72876)).
 ```
 python3 CalcMode.py -f [Parameter file name] -p [Parameter name]
 mpiexec -np [Number of thread] python3 CalcModeMPI.py -f [Parameter file name] -p [Parameter name]

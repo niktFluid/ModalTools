@@ -67,7 +67,7 @@ PrandtlNumber = 0.7
 
 
 ### モード解析
-以下のコマンドを実行すると可視化用のTecPlot ASCII形式ファイル (.dat) とデータ保存用のバイナリファイル (.pickle) が出力されます．また，安定性解析を実施した場合は固有値，レゾルベント解析の実施時にはゲインがテキストファイルとして出力されます．
+以下のコマンドを実行すると可視化用のTecPlot ASCII形式ファイル (.dat) とデータ保存用のバイナリファイル (.pickle) が出力されます．また，安定性解析を実施した場合は固有値，レゾルベント解析の実施時にはゲインがテキストファイルとして出力されます．また，レゾルベント解析の結果得られたゲイン分布のプロットが出力されます．ゲイン分布はその値と購買の情報を用いて3次内挿されます([参考文献1](https://web.stanford.edu/group/ctr/Summer/SP14/08_Transition_and_turbulence/11_fosas.pdf), [参考文献2](https://spiral.imperial.ac.uk/handle/10044/1/72876))．
 ```
 python3 CalcMode.py -f [Parameter file name] -p [Parameter name]
 mpiexec -np [Number of thread] python3 CalcModeMPI.py -f [Parameter file name] -p [Parameter name]
