@@ -469,7 +469,7 @@ class RandomizedResolventMode(ResolventMode):
         _, _, V = sp.linalg.svd(matB.T.conj(), full_matrices=False)
         matUS = resolvent_lu.solve(V.T.conj())
 
-        U, Sigma, Vapp = sp.linalg.svd(matUS.conj(), full_matrices=False)
+        U, Sigma, Vapp = sp.linalg.svd(matUS, full_matrices=False)
         V = V.T.conj() @ Vapp.T.conj()
 
         return Sigma, self.qi @ U, self.qi @ V

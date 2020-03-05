@@ -15,6 +15,8 @@ from Functions.ModalAnalysis import ResolventMode as Resolvent
 from Functions.ModalAnalysis import LinearStabilityMode as LSMode
 from Functions.ModalAnalysis import RandomizedResolventMode as RandomizedResolvent
 
+from PlotResolventGain import PlotResolventGain
+
 
 def main(param_file='Parameter.dat', profile='Default'):
     if not os.path.exists(param_file):
@@ -122,9 +124,10 @@ def CalcResolvent(case_dir, time, operator_name, save_name, k=3, omega=None, alp
         alpha_array = np.array([alpha])
 
     grid_list = [(o, a) for o, a in product(omega_array, alpha_array)]
-    resolvent_mode = Resolvent(mesh, ave_field, operator_name,
-                               k=k, omega=omega, alpha=alpha, mode=mode, mpi_comm=mpi_comm)
+    resolvent_mode = Resolvent(mesh, ave_field, operator_name, k=k, mode=mode, mpi_comm=mpi_comm)
     resolvent_mode.solve(grid_list, save_name)
+
+    PlotResolventGain(case_dir, time, operator_name, save_name, k)
 
 
 def CalcRandomizedResolvent(case_dir, time, operator_name, save_name,
@@ -146,6 +149,8 @@ def CalcRandomizedResolvent(case_dir, time, operator_name, save_name,
     grid_list = [(o, a) for o, a in product(omega_array, alpha_array)]
     resolvent_mode = RandomizedResolvent(mesh, bd_cond, ave_field, operator_name, k=k, mode=mode, mpi_comm=mpi_comm)
     resolvent_mode.solve(grid_list, save_name)
+
+    PlotResolventGain(case_dir, time, operator_name, save_name, k)
 
 
 if __name__ == '__main__':
