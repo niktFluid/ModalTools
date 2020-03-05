@@ -150,7 +150,7 @@ def CalcRandomizedResolvent(case_dir, time, operator_name, save_name,
     resolvent_mode = RandomizedResolvent(mesh, bd_cond, ave_field, operator_name, k=k, mode=mode, mpi_comm=mpi_comm)
     resolvent_mode.solve(grid_list, save_name)
 
-    PlotResolventGain(case_dir, time, operator_name, save_name, k)
+    PlotResolventGain(resolvent_mode, save_name, k)
 
 
 if __name__ == '__main__':

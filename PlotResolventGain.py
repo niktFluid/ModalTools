@@ -44,21 +44,21 @@ def main(param_file='Parameter.dat', profile='Default', length=None, velocity=No
     save_name = params['SaveName']
     k = int(params['ModeNum'])
 
-    PlotResolventGain(case_dir, time_dir, operator, save_name, k=k, length=length, velocity=velocity)
+    mesh = OfMesh(case_dir, time_dir + 'C', time_dir + 'V', time_dir + 'U', time_dir + 'p')
+    ave_field = OfData(mesh, case_dir + time_dir, 'UMean', 'pMean', 'rhoMean')
+    resolvent_mode = Resolvent(mesh, ave_field, operator, k=k, mode='Both')
+
+    PlotResolventGain(resolvent_mode, save_name, k=k, length=length, velocity=velocity)
 
 
-def PlotResolventGain(case_dir, time, operator_name, save_name, k=3, length=None, velocity=None):
+def PlotResolventGain(mode_obj, save_name, k=3, length=None, velocity=None):
     flag_st_conv = length is not None and velocity is not None
-
-    mesh = OfMesh(case_dir, time + 'C', time + 'V', time + 'U', time + 'p')
-    ave_field = OfData(mesh, case_dir + time, 'UMean', 'pMean', 'rhoMean')
-    resolvent_mode = Resolvent(mesh, ave_field, operator_name, k=k, mode='Both')
 
     gains_filename = save_name + '/gains.dat'
     file_num, omega, alpha, gains = get_gains(gains_filename)
 
     print('Calculating gains...')
-    gain_grads = get_gain_grad(resolvent_mode, save_name, file_num, gains, k)
+    gain_grads = get_gain_grad(mode_obj, save_name, file_num, gains, k)
     omega_plot, gain_plot = get_plot_data(omega, gains[:, 0:k], gain_grads)
     print('Done.')
 
