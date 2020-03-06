@@ -35,7 +35,7 @@ writeControl    adjustableRunTime;
 
 writeInterval   100.0;
 
-purgeWrite      5;
+purgeWrite      1;
 
 writeFormat     ascii;
 
@@ -58,30 +58,26 @@ functions
             rho
             {
                 mean on;
-                prime2Mean on;
                 base time;
             }
 
             U
             {
                 mean on;
-                prime2Mean on;
                 base time;
             }
 
             p
             {
                 mean on;
-                prime2Mean on;
                 base time;
             }
 
             T
-	    {
-	      mean on;
-	      prime2Mean on;
-	      base time;
-	    }
+            {
+              mean on;
+              base time;
+            }
         );
         writeControl writeTime;
         writeInterval 1;
