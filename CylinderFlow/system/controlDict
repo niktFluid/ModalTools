@@ -58,24 +58,28 @@ functions
             rho
             {
                 mean on;
+                prime2Mean off;
                 base time;
             }
 
             U
             {
                 mean on;
+                prime2Mean off;
                 base time;
             }
 
             p
             {
                 mean on;
+                prime2Mean off;
                 base time;
             }
 
             T
             {
               mean on;
+              prime2Mean off;
               base time;
             }
         );
