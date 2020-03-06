@@ -9,19 +9,19 @@
 ## デモ
 2次元円柱周り流れのシミュレーションデータを用いた，本コードの簡単なデモンストレーションを紹介します．流れ場の気流条件は<img src="https://latex.codecogs.com/gif.latex?Re=150">, <img src="https://latex.codecogs.com/gif.latex?M_\infty=0.2">としています. シミュレーションはOpenFOAMを用いて実行しました. 上記の条件でシミュレーションを実施した場合，円柱背後にはカルマン渦列が形成され，その振動周波数はストローハル数で<img src="https://latex.codecogs.com/gif.latex?St=0.178">になります. 時間平均流れ場を用いてLNSオペレータを構築し，安定性解析とレゾルベント解析を実施します．
 
-![Figure1-1](https://user-images.githubusercontent.com/47338366/75612946-26982980-5add-11ea-97c5-cc24cd3bc953.png)
+![Figure1-2](https://user-images.githubusercontent.com/47338366/76111253-cc8fdc00-5f94-11ea-880f-b9a0953f5330.png)
 
 
 ### 安定性解析
 流れ場の (全体) 安定性解析はLNSオペレータに関する固有値問題を解くことで実施できます．LNSオペレータのスペクトル (固有値の集合) は時間平均流れ場における微小擾乱の動的な成長特性に関する情報を，対応する固有ベクトルは流れ場の構造 (モード) の情報を持っています．固有値の実部はモードの成長率を表しており，虚部は周波数に対応しています．円柱周り流れの安定性解析の結果を下図に示します．スペクトル (下図左) を見ると，いくつかの固有値が不安定面 (<img src="https://latex.codecogs.com/gif.latex?{\rm&space;Re}(\lambda)&space;>&space;0">) に位置していることが分かります．この内，より高周波のモードに対応している固有値 (<img src="https://latex.codecogs.com/gif.latex?\lambda&space;=&space;7.25&space;\times&space;10^{-3}&space;&plus;&space;0.208i">) の虚部の値はストローハル数換算の周波数で<img src="https://latex.codecogs.com/gif.latex?St=0.165">に対応しており，シミュレーションで得られた渦振動の周波数に近い値を示しています．実際に，この固有値に対応する流れ場のモードは，下図右に示していますように，明らかに円柱背後の渦振動に対応しています．また，実軸上にある不安定モードに対応する固有値は，シミュレーションにおける時間平均操作が十分でないために現れていると考えられます (これらの固有値に対応するモードを可視化してみて下さい)．
 
-![Figure2-1](https://user-images.githubusercontent.com/47338366/75613193-b2ab5080-5adf-11ea-94dc-2ba803502a39.png)
+![Figure2-2](https://user-images.githubusercontent.com/47338366/76111278-d580ad80-5f94-11ea-966a-903eed397f2a.png)
 
 
 ### レゾルベント解析
 レゾルベント解析では，LNSオペレータで表現される線形システムの入力 (加振) ・出力 (応答) モードを調べることができます．LNSオペレータの特異値分解 (SVD: Singular Value Decomposition) により得られる左右特異行列に含まれる各特異ベクトル (モード) はそれぞれ線形システムの出力・入力空間の直交基底を構成しており，対応する特異値は入出力モード間のエネルギー増幅率 (ゲイン) を表しています．レゾルベント解析ではそれぞれの周波数に対して複数のモードが得られます．通常はSVDによって全てのモードを計算することは無く (膨大な時間とメモリを消費します)，特異値 (ゲイン) の大きい順に少数のモードに限って計算します．最大特異値に対応するモードは支配モードと呼ばれます．レゾルベント解析によって得られた，円柱周り流れに対するゲインの内，最も大きい3つのモードに対応するゲインの分布を下図左に示します．支配モードのゲインは渦振動の周波数付近でピークに達していますが，これはカルマン渦振動が流体力学的な不安定性に起因していることが原因です (入出力間のエネルギー比が極めて大きくなり得る).．下図右には渦振動の周波数における支配モードの可視化結果を示していますが，出力モードは明らかに渦振動のモードに対応していることが分かります．一方，入力モードは円柱近傍における何らかの速度変動モードに対応しています．本コードでは通常のレゾルベント解析の他に，乱択アルゴリズムに基づく高速なレゾルベント解析の計算法 ([randomized resolvent analysis](https://arxiv.org/abs/1902.01458)) も実装しています．
 
-![Figure3-1](https://user-images.githubusercontent.com/47338366/75613466-e340b980-5ae2-11ea-960e-13f0339524d6.png)
+![Figure3-2](https://user-images.githubusercontent.com/47338366/76111281-d7e30780-5f94-11ea-9f57-79398097fc97.png)
 
 
 ## 依存モジュール
@@ -50,12 +50,13 @@ postProcess -funcs writeCellVolumes
 
 
 ### オペレータの生成
+[GenerateOperator.py](GenerateOperator.py) または [GenerateOperatorMPI.py](GenerateOperatorMPI.py) (並列計算用) を用いてオペレータを生成できます．
 ```
 python3 GenerateOperator.py -f [Parameter file name] -p [Parameter name]
 mpiexec -np [Number of thread] python3 GenerateOperatorMPI.py -f [Parameter file name] -p [Parameter name]
 ```
 
-パラメータファイル ([Parameters.dat](Parameters.dat))の設定例を下記に示します.
+パラメータファイル ([Parameters.dat](Parameters.dat)) の設定れいを以下に示します．`CaseDir`と` TimeDir` はそれぞれシミュレーションのケースディレクトリとシミュレーションデータを含む時刻ディレクトリを設定します．
 ```
 [GenerateOperator]
 CaseDir = CylinderFlow/
@@ -66,13 +67,14 @@ PrandtlNumber = 0.7
 ```
 
 
-### モード解析
-以下のコマンドを実行すると可視化用のTecPlot ASCII形式ファイル (.dat) とデータ保存用のバイナリファイル (.pickle) が出力されます．また，安定性解析を実施した場合は固有値，レゾルベント解析の実施時にはゲインがテキストファイルとして出力されます．また，レゾルベント解析の結果得られたゲイン分布のプロットが出力されます．ゲイン分布はその値と購買の情報を用いて3次内挿されます([参考文献1](https://web.stanford.edu/group/ctr/Summer/SP14/08_Transition_and_turbulence/11_fosas.pdf), [参考文献2](https://spiral.imperial.ac.uk/handle/10044/1/72876))．
+### Stability or Resolvent Analysis
+[CalcMode.py](CalcMode.py) または [CalcModeMPI.py](CalcModeMPI.py) を用いて安定性解析やレゾルベント解析を実行できます． 以下のコマンドを実行すると可視化用のTecPlot ASCII形式ファイル (.dat) とデータ保存用のバイナリファイル (.pickle) が出力されます．安定性解析を実施した場合は固有値，レゾルベント解析の実施時にはゲインがテキストファイルとして出力されます．また，レゾルベント解析の結果得られたゲイン分布のプロットが出力されます．ゲイン分布はその値と購買の情報を用いて3次内挿されます ([参考文献1](https://web.stanford.edu/group/ctr/Summer/SP14/08_Transition_and_turbulence/11_fosas.pdf), [参考文献2](https://spiral.imperial.ac.uk/handle/10044/1/72876))．
 ```
 python3 CalcMode.py -f [Parameter file name] -p [Parameter name]
 mpiexec -np [Number of thread] python3 CalcModeMPI.py -f [Parameter file name] -p [Parameter name]
 ```
 
+このツールでは固有値問題を解く際に，shift-invertモードを使用して複素平面場の固有値を求めます．Shift-invertモードを使用する際に必要な複素数値の組みはパラメータ (以下の例では`Sigma*`) によって制御され，それぞれの複素数に対して固有値問題が解かれます．`ModeNum`は各複素数に対して計算される固有値および固有ベクトルの数を設定します．以下の例では，計算を実行すると104個 (= 4 * 26) のモードが出力されます．また，`Which`は固有値計算の優先順位を制御します (詳細は[こちら](https://docs.scipy.org/doc/scipy/reference/tutorial/arpack.html)をご覧下さい)．
 ```
 [Stability]
 Mode = Stability
@@ -90,8 +92,9 @@ SigmaImagNum = 26
 Which = LM
 ```
 
+レゾルベン解析に際しては，計算を高速化するために [randomized method](https://arxiv.org/abs/1902.01458) の使用をおすすめします．`Omega`に関するパラメータはレゾルベント解析における周波数スイープの設定に使用されます．`Alpha`の値はレゾルベントモードの時間割引きに関係しています (詳細は[こちらの論文](https://doi.org/10.1017/jfm.2019.163)をご覧ください)．また，`ResolventMode` はどのモードを保存するかを設定しており， `Both`, `Response`, `Forcing` が使用できます.
 ```
-[ResolventDefault]
+[Resolvent]
 Mode = RandomizedResolvent
 CaseDir = CylinderFlow/
 TimeDir = 1000/
@@ -107,8 +110,8 @@ AlphaNum = 1
 ResolventMode = Both
 ```
 
-
 ## 作者
+
 * **小島 良実** - [niktFluid](https://github.com/niktFluid)
 
 

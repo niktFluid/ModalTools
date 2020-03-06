@@ -21,7 +21,7 @@ SigmaImagEnd = 1.0
 SigmaImagNum = 26
 Which = LM
 
-[ResolventDefault]
+[Resolvent]
 Mode = RandomizedResolvent
 CaseDir = CylinderFlow/
 TimeDir = 1000/
